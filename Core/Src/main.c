@@ -65,11 +65,13 @@ void toggle_led_flag();
 void display7SEG(int num, GPIO_TypeDef * GPIO_TYPE, uint16_t a_Pin, uint16_t b_Pin, uint16_t c_Pin, uint16_t d_Pin, uint16_t e_Pin, uint16_t f_Pin, uint16_t g_Pin);
 int counter = INIT_COUNTER;
 void reset_counter();
+void seg7led_turn();
 void toggle_flag();
+int flag = 0;
 const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer[4] = {1 , 2 , 3 , 4};
-int flag = 0;
+int led_order = 0;
 void update7SEG(int index);
 void turn_led(int led);
 int hour = 15, minute = 8, second = 50;
@@ -119,7 +121,11 @@ int main(void)
 		  HAL_GPIO_TogglePin(GPIOA, DOT_Pin);
 		  toggle_led_flag();
 	  }
-	  update7SEG(flag);
+	  if (flag == 1) {
+		  time_update();
+		  update7SEG(led_order);
+		  toggle_flag();
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -259,14 +265,21 @@ void toggle_led_flag() {
 		led_flag = 0;
 	}
 }
+void seg7led_turn() {
+	if (led_order == 0) {
+		led_order = 1;
+	} else if (led_order == 1) {
+		led_order = 2;
+	} else if (led_order == 2) {
+		led_order = 3;
+	} else if (led_order == 3) {
+		led_order = 0;
+	}
+}
 void toggle_flag() {
 	if (flag == 0) {
 		flag = 1;
 	} else if (flag == 1) {
-		flag = 2;
-	} else if (flag == 2) {
-		flag = 3;
-	} else if (flag == 3) {
 		flag = 0;
 	}
 }
@@ -365,8 +378,8 @@ void HAL_TIM_PeriodElapsedCallback( TIM_HandleTypeDef * htim ) {
 	led_counter--;
 	if (counter == 0) {
 		reset_counter();
+		seg7led_turn();
 		toggle_flag();
-		time_update();
 	}
 	if (led_counter == 0) {
 		reset_led_counter();

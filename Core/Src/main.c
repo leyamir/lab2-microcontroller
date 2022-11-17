@@ -65,11 +65,16 @@ void toggle_led_flag();
 void display7SEG(int num, GPIO_TypeDef * GPIO_TYPE, uint16_t a_Pin, uint16_t b_Pin, uint16_t c_Pin, uint16_t d_Pin, uint16_t e_Pin, uint16_t f_Pin, uint16_t g_Pin);
 int counter = INIT_COUNTER;
 void reset_counter();
-void turn_led(int led);
+void toggle_flag();
 const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer[4] = {1 , 2 , 3 , 4};
+int flag = 0;
 void update7SEG(int index);
+void turn_led(int led);
+int hour = 15, minute = 8, second = 50;
+void time_update();
+void updateClockBuffer();
 /* USER CODE END 0 */
 
 /**
@@ -114,6 +119,7 @@ int main(void)
 		  HAL_GPIO_TogglePin(GPIOA, DOT_Pin);
 		  toggle_led_flag();
 	  }
+	  update7SEG(flag);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -253,6 +259,17 @@ void toggle_led_flag() {
 		led_flag = 0;
 	}
 }
+void toggle_flag() {
+	if (flag == 0) {
+		flag = 1;
+	} else if (flag == 1) {
+		flag = 2;
+	} else if (flag == 2) {
+		flag = 3;
+	} else if (flag == 3) {
+		flag = 0;
+	}
+}
 void reset_counter() {
 	counter = INIT_COUNTER;
 }
@@ -282,7 +299,6 @@ void update7SEG(int index) {
 		break ;
 	}
 }
-
 void turn_led(int led) {
 	switch (led) {
 		case 0:
@@ -311,15 +327,46 @@ void turn_led(int led) {
 			  break;
 	}
 }
+void time_update() {
+	second++;
+	if ( second >= 60) {
+		second = 0;
+		minute ++;
+	}
+	if( minute >= 60) {
+		minute = 0;
+		hour ++;
+	}
+	if( hour >=24) {
+		hour = 0;
+	}
+	updateClockBuffer();
+}
+void updateClockBuffer() {
+	if (hour >= 0 && hour <= 9) {
+		led_buffer[0] = 0;
+		led_buffer[1] = hour;
+	}
+	if (hour >= 10 && hour <= 24) {
+		led_buffer[0] = hour / 10;
+		led_buffer[1] = hour % 10;
+	}
+	if (minute >= 0 && minute <= 9) {
+		led_buffer[2] = 0;
+		led_buffer[3] = minute;
+	}
+	if (hour >= 10 && hour <= 60) {
+		led_buffer[2] = minute / 10;
+		led_buffer[3] = minute % 10;
+	}
+}
 void HAL_TIM_PeriodElapsedCallback( TIM_HandleTypeDef * htim ) {
 	counter--;
 	led_counter--;
 	if (counter == 0) {
 		reset_counter();
-		update7SEG(index_led++);
-		if (index_led == 4) {
-			index_led = 0;
-		}
+		toggle_flag();
+		time_update();
 	}
 	if (led_counter == 0) {
 		reset_led_counter();

@@ -32,7 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define INIT_COUNTER 4
+#define INIT_COUNTER 50
 #define INIT_LED_COUNTER 100
 /* USER CODE END PD */
 

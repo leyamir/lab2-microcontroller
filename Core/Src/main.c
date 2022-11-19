@@ -32,7 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define INIT_COUNTER 50
+#define INIT_COUNTER 10
 #define INIT_LED_COUNTER 100
 /* USER CODE END PD */
 
@@ -120,9 +120,9 @@ int main(void)
 		  HAL_GPIO_TogglePin(GPIOA, LED_RED_Pin);
 		  HAL_GPIO_TogglePin(GPIOA, DOT_Pin);
 		  toggle_led_flag();
+		  time_update();
 	  }
 	  if (flag == 1) {
-		  time_update();
 		  update7SEG(led_order);
 		  toggle_flag();
 	  }

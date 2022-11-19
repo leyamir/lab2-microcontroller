@@ -121,7 +121,7 @@ int main(void)
  8000166:	4b0f      	ldr	r3, [pc, #60]	; (80001a4 <main+0x58>)
  8000168:	681b      	ldr	r3, [r3, #0]
  800016a:	2b01      	cmp	r3, #1
- 800016c:	d109      	bne.n	8000182 <main+0x36>
+ 800016c:	d10b      	bne.n	8000186 <main+0x3a>
 		  HAL_GPIO_TogglePin(GPIOA, LED_RED_Pin);
  800016e:	2120      	movs	r1, #32
  8000170:	480d      	ldr	r0, [pc, #52]	; (80001a8 <main+0x5c>)
@@ -132,14 +132,14 @@ int main(void)
  800017a:	f001 f8a7 	bl	80012cc <HAL_GPIO_TogglePin>
 		  toggle_led_flag();
  800017e:	f000 f901 	bl	8000384 <toggle_led_flag>
+		  time_update();
+ 8000182:	f000 fa47 	bl	8000614 <time_update>
 	  }
 	  if (flag == 1) {
- 8000182:	4b0a      	ldr	r3, [pc, #40]	; (80001ac <main+0x60>)
- 8000184:	681b      	ldr	r3, [r3, #0]
- 8000186:	2b01      	cmp	r3, #1
- 8000188:	d1ed      	bne.n	8000166 <main+0x1a>
-		  time_update();
- 800018a:	f000 fa43 	bl	8000614 <time_update>
+ 8000186:	4b09      	ldr	r3, [pc, #36]	; (80001ac <main+0x60>)
+ 8000188:	681b      	ldr	r3, [r3, #0]
+ 800018a:	2b01      	cmp	r3, #1
+ 800018c:	d1eb      	bne.n	8000166 <main+0x1a>
 		  update7SEG(led_order);
  800018e:	4b08      	ldr	r3, [pc, #32]	; (80001b0 <main+0x64>)
  8000190:	681b      	ldr	r3, [r3, #0]
@@ -616,7 +616,7 @@ void reset_counter() {
  8000436:	af00      	add	r7, sp, #0
 	counter = INIT_COUNTER;
  8000438:	4b03      	ldr	r3, [pc, #12]	; (8000448 <reset_counter+0x14>)
- 800043a:	2232      	movs	r2, #50	; 0x32
+ 800043a:	220a      	movs	r2, #10
  800043c:	601a      	str	r2, [r3, #0]
 }
  800043e:	bf00      	nop
